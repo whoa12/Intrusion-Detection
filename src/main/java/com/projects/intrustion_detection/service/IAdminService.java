@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface IAdminService {
      List<Attack> getAllAttacks();
-     Attack getAttackById(Long id);
+     Attack getAttackById(Integer id);
 
      List<BlockedIpAddress> getAllBlockedIpAddressList();
 
-     BlockedIpAddress getBlockedAddressById(Long id);
+     BlockedIpAddress getBlockedAddressById(Integer id) throws RuntimeException;
 
      void blockUser(String email);
 

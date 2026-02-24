@@ -112,6 +112,8 @@ public class AuthController {
         } catch (AuthenticationException ex) {  //basically, failed login attempt
             attemptService.trackIp(ip);
 
+
+
             AuthResponse response = new AuthResponse();
             Optional<UserInfo> userByEmail = userRepository.findByEmail(request.getEmail());
             if(userByEmail.isPresent()){
@@ -119,6 +121,8 @@ public class AuthController {
                 user.setFailedAttempts(user.getFailedAttempts() + 1);
                 if(user.getFailedAttempts() >= 15) {
                     user.setAccountNonLocked(false);
+                    attemptService.logAttack(httpServletRequest.getRequestURI(),
+                           ip, request.getEmail());
                 }
                 userRepository.save(user);
 
