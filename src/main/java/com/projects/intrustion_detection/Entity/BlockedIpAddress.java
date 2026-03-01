@@ -1,5 +1,6 @@
 package com.projects.intrustion_detection.Entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class BlockedIpAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

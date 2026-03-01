@@ -2,6 +2,7 @@ package com.projects.intrustion_detection.service;
 
 import com.projects.intrustion_detection.Entity.Attack;
 import com.projects.intrustion_detection.Entity.BlockedIpAddress;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -16,5 +17,11 @@ public interface IAdminService {
      void blockUser(String email);
 
      void unblockUser(String email);
+
+     void blockUserByIpAddress(String ipAddress, BlockedIpAddress blockedIpAddress);
+
+     void unblockUserByIpAddress(String ipAddress);
+
+
 
 }

@@ -1,5 +1,6 @@
 package com.projects.intrustion_detection.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class Attack {
     private String uri;
     private String payload;
     private LocalDateTime timeStamp;
+
+    @JsonIgnore
     private boolean blocked = false;
 
 

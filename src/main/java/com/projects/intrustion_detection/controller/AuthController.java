@@ -1,7 +1,9 @@
 package com.projects.intrustion_detection.controller;
 
 import com.projects.intrustion_detection.Configuration.JwtService;
+import com.projects.intrustion_detection.Entity.BlockedIpAddress;
 import com.projects.intrustion_detection.Entity.UserInfo;
+import com.projects.intrustion_detection.repository.BlockedIpAddressRepository;
 import com.projects.intrustion_detection.repository.UserInfoRepository;
 import com.projects.intrustion_detection.request.AuthRequest;
 import com.projects.intrustion_detection.response.AuthResponse;
@@ -19,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -31,6 +34,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final AttemptService attemptService;
+    private final BlockedIpAddressRepository blockedIpAddressRepository;
 
 
 
@@ -112,8 +116,6 @@ public class AuthController {
         } catch (AuthenticationException ex) {  //basically, failed login attempt
             attemptService.trackIp(ip);
 
-
-
             AuthResponse response = new AuthResponse();
             Optional<UserInfo> userByEmail = userRepository.findByEmail(request.getEmail());
             if(userByEmail.isPresent()){
@@ -121,6 +123,12 @@ public class AuthController {
                 user.setFailedAttempts(user.getFailedAttempts() + 1);
                 if(user.getFailedAttempts() >= 15) {
                     user.setAccountNonLocked(false);
+                    BlockedIpAddress blockedIpAddress = new BlockedIpAddress();
+                    blockedIpAddress.setIpAddress(ip);
+                    blockedIpAddress.setReason("IP Address: "+ ip + " blocked automatically" +
+                            " for violating maximum number of attempts to login.");
+                    blockedIpAddress.setTimeStamp(LocalDateTime.now());
+                    blockedIpAddressRepository.save(blockedIpAddress);
                     attemptService.logAttack(httpServletRequest.getRequestURI(),
                            ip, request.getEmail());
                 }
