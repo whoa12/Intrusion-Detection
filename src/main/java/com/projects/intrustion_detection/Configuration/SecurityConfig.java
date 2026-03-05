@@ -1,5 +1,6 @@
 package com.projects.intrustion_detection.Configuration;
 
+import com.projects.intrustion_detection.Filters.IPBlockFilter;
 import com.projects.intrustion_detection.Filters.SqlFilter;
 import com.projects.intrustion_detection.Filters.XssDetection;
 import org.springframework.context.annotation.Bean;
@@ -23,11 +24,13 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final SqlFilter sqlFilter;
     private final XssDetection xssDetection;
+    private final IPBlockFilter ipBlockFilter;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, SqlFilter sqlFilter, XssDetection xssDetection) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, SqlFilter sqlFilter, XssDetection xssDetection, IPBlockFilter ipBlockFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.sqlFilter = sqlFilter;
         this.xssDetection = xssDetection;
+        this.ipBlockFilter = ipBlockFilter;
     }
 
     @Bean
@@ -38,18 +41,21 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configure(http)) // 1. Enable CORS in Security
+                .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/register", "/auth/login", "/test/*").permitAll()
-                        .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(sqlFilter, JwtAuthFilter.class)
-                .addFilterBefore(xssDetection, SqlFilter.class);
+                .addFilterBefore(xssDetection, SqlFilter.class)
+                .addFilterBefore(ipBlockFilter, XssDetection.class);
 
 
 
@@ -72,6 +78,19 @@ public class SecurityConfig {
             AuthenticationConfiguration config
     ) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
+        configuration.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // No trailing slash
+        configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 

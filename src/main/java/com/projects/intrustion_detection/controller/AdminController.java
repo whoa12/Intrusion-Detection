@@ -14,14 +14,7 @@ import java.util.List;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    private IAdminService adminService;
-
-    @GetMapping
-    public ResponseEntity<List<Attack>> getAttacks(){
-        List<Attack> attacks = adminService.getAllAttacks();
-        return ResponseEntity.ok().body(attacks);
-    }
-
+    private final IAdminService adminService;
     @GetMapping("/{id}")
     public ResponseEntity<Attack> getAttackById(@PathVariable("id") Integer id){
         Attack attack = adminService.getAttackById(id);
