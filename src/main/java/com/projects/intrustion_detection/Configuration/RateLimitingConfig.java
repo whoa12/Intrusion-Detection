@@ -17,7 +17,10 @@ import java.time.Duration;
 public class RateLimitingConfig {
     @Bean(destroyMethod = "shutdown")
     public RedisClient redisClient() {
-        String uri = "redis://127.0.0.1:6379";
+        String uri = System.getenv("REDIS_URL");
+        if(uri == null || uri.isEmpty()){
+            uri = "redis://127.0.0.1:6379";
+        }
         System.out.println("Connecting to Redis at: " + uri);
         return RedisClient.create(uri);
     }

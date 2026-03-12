@@ -1,22 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/intrusion_detection?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: root123
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-
+    url: postgresql://intrusion_detection_db_user:QBK3W4vuVTbqladCN5sg88Gd4zezQiyS@dpg-d6p42f6a2pns73f614og-a/intrusion_detection_db
+    username: {DB_USERNAME}
+    password: {DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   main:
     allow-bean-definition-overriding: true  # Allow overriding beans
 
