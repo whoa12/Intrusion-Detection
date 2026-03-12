@@ -41,9 +41,7 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configure(corsConfigurationSource())) // 1. Enable CORS in Security
-                .csrf(csrf -> csrf.disable())
-
+                .cors(cors -> cors.configure(corsConfigurationSource())) 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/register", "/auth/login", "/test/*").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
