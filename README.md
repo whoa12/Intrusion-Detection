@@ -41,10 +41,5 @@ The system monitors incoming API requests and:
 
 ---
 
-## 📂 Project Structure
-intrusion-detection/
-│
-├── src/main/java
-├── src/main/resources
-├── pom.xml
-└── README.md
+## 📂 Architecture Diagram
+![Architecture Diagram](https://github.com/whoa12/Intrusion-Detection/blob/main/Architecture_Diagram.png?raw=true)
