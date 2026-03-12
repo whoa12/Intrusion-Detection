@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: postgresql://intrusion_detection_db_user:QBK3W4vuVTbqladCN5sg88Gd4zezQiyS@dpg-d6p42f6a2pns73f614og-a/intrusion_detection_db
-    username: {DB_USERNAME}
-    password: {DB_PASSWORD}
+    url: jdbc:postgresql://dpg-d6p42f6a2pns73f614og-a:5432/intrusion_detection_db
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -10,7 +11,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-  main:
-    allow-bean-definition-overriding: true  # Allow overriding beans
 
-  # ... your other configurations
+  main:
+    allow-bean-definition-overriding: true
