@@ -43,3 +43,5 @@ The system monitors incoming API requests and:
 
 ## 📂 Architecture Diagram
 ![Architecture Diagram](https://github.com/whoa12/Intrusion-Detection/blob/main/Architecture_Diagram.png?raw=true)
+
+Frontend: https://github.com/whoa12/Intrusion-Detection-Frontend
